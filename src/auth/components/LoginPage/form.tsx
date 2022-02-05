@@ -23,7 +23,7 @@ export interface LoginFormProps {
 const getLoginFormData = () => {
   if (DEMO_MODE) {
     return {
-      email: "admin@example.com",
+      email: "admin@uyghur.store",
       password: "admin"
     };
   }

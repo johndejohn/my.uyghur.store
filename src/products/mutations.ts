@@ -6,11 +6,12 @@ import {
   productChannelListingErrorFragment,
   productErrorFragment,
   productErrorWithAttributesFragment,
+  productVariantStocksDeleteErrorFragment,
   stockErrorFragment
 } from "@saleor/fragments/errors";
 import {
-  channelListingProductFragment,
   channelListingProductVariantFragment,
+  channelListingProductWithoutPricingFragment,
   exportFileFragment,
   fragmentPreorder,
   fragmentProductMedia,
@@ -331,6 +332,7 @@ export const variantUpdateMutation = gql`
   ${bulkStockErrorFragment}
   ${fragmentVariant}
   ${productErrorWithAttributesFragment}
+  ${productVariantStocksDeleteErrorFragment}
   mutation VariantUpdate(
     $addStocks: [StockInput!]!
     $removeStocks: [ID!]!
@@ -386,8 +388,7 @@ export const variantUpdateMutation = gql`
     }
     productVariantStocksDelete(warehouseIds: $removeStocks, variantId: $id) {
       errors {
-        code
-        field
+        ...ProductVariantStocksDeleteErrorFragment
       }
       productVariant {
         id
@@ -611,7 +612,7 @@ export const useProductExport = makeMutation<
 >(productExportMutation);
 
 export const ProductChannelListingUpdateMutation = gql`
-  ${channelListingProductFragment}
+  ${channelListingProductWithoutPricingFragment}
   ${channelListingProductVariantFragment}
   ${productChannelListingErrorFragment}
   mutation ProductChannelListingUpdate(
@@ -622,7 +623,7 @@ export const ProductChannelListingUpdateMutation = gql`
       product {
         id
         channelListings {
-          ...ChannelListingProductFragment
+          ...ChannelListingProductWithoutPricingFragment
         }
         variants {
           id
@@ -665,7 +666,7 @@ export const useProductChannelListingUpdate = makeMutation<
 
 export const ProductVariantChannelListingUpdateMutation = gql`
   ${channelListingProductVariantFragment}
-  ${channelListingProductFragment}
+  ${channelListingProductWithoutPricingFragment}
   ${productChannelListingErrorFragment}
   mutation ProductVariantChannelListingUpdate(
     $id: ID!
@@ -680,7 +681,7 @@ export const ProductVariantChannelListingUpdateMutation = gql`
         product {
           id
           channelListings {
-            ...ChannelListingProductFragment
+            ...ChannelListingProductWithoutPricingFragment
           }
         }
       }

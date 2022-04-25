@@ -82,26 +82,3 @@ export function deleteShippingStartsWith(startsWith) {
     startsWith
   );
 }
-
-export function createShippingWithDefaultChannel(name, price) {
-  let defaultChannel;
-
-  return getDefaultChannel()
-    .then(channel => {
-      defaultChannel = channel;
-      cy.fixture("addresses");
-    })
-    .then(addresses => {
-      createShipping({
-        channelId: defaultChannel.id,
-        name,
-        address: addresses.usAddress,
-        price
-      });
-    })
-    .then(({ shippingMethod, shippingZone }) => ({
-      shippingMethod,
-      shippingZone,
-      defaultChannel
-    }));
-}

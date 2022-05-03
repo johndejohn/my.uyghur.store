@@ -1042,14 +1042,6 @@
   "src_dot_attributes_dot_components_dot_AttributeListPage_dot_3916653510": {
     "string": "Search Attribute"
   },
-  "src_dot_attributes_dot_components_dot_AttributeListPage_dot_availableInGrid": {
-    "context": "attribute can be column in product list table",
-    "string": "Can be used as column"
-  },
-  "src_dot_attributes_dot_components_dot_AttributeListPage_dot_filterableInDashboard": {
-    "context": "use attribute in filtering",
-    "string": "Filterable in Dashboard"
-  },
   "src_dot_attributes_dot_components_dot_AttributeListPage_dot_filterableInStorefront": {
     "context": "use attribute in filtering",
     "string": "Filterable in Storefront"
@@ -1069,9 +1061,9 @@
   "src_dot_attributes_dot_components_dot_AttributeList_dot_1192828581": {
     "string": "No attributes found"
   },
-  "src_dot_attributes_dot_components_dot_AttributeList_dot_2186555805": {
+  "src_dot_attributes_dot_components_dot_AttributeList_dot_1708933569": {
     "context": "attribute can be searched in storefront",
-    "string": "Use in faceted search"
+    "string": "Use as filter"
   },
   "src_dot_attributes_dot_components_dot_AttributeList_dot_2235596452": {
     "context": "attribute can be searched in dashboard",
@@ -1132,7 +1124,7 @@
   },
   "src_dot_attributes_dot_components_dot_AttributeProperties_dot_filterableInStorefront": {
     "context": "attribute is filterable in storefront",
-    "string": "Use in Faceted Navigation"
+    "string": "Use as filter"
   },
   "src_dot_attributes_dot_components_dot_AttributeProperties_dot_storefrontPropertiesTitle": {
     "context": "attribute properties regarding storefront",
@@ -2102,17 +2094,17 @@
     "context": "Status label when object is unpublished in a channel",
     "string": "Unpublished"
   },
-  "src_dot_components_dot_ColumnPicker_dot_1483881697": {
-    "context": "button",
-    "string": "Reset"
+  "src_dot_components_dot_ColumnPicker_dot_columnLabel": {
+    "context": "input label",
+    "string": "Selected columns"
   },
-  "src_dot_components_dot_ColumnPicker_dot_2539195044": {
-    "context": "select visible columns button",
-    "string": "Columns"
+  "src_dot_components_dot_ColumnPicker_dot_columnSubheader": {
+    "context": "header",
+    "string": "Column settings"
   },
-  "src_dot_components_dot_ColumnPicker_dot_2715399461": {
-    "context": "pick columns to display",
-    "string": "{numberOfSelected} columns selected out of {numberOfTotal}"
+  "src_dot_components_dot_ColumnPicker_dot_title": {
+    "context": "header",
+    "string": "Customize list"
   },
   "src_dot_components_dot_CompanyAddressInput_dot_1139500589": {
     "string": "Country"
@@ -2224,6 +2216,14 @@
   "src_dot_components_dot_Filter_dot_FilterContent_dot_996289613": {
     "string": "Filters"
   },
+  "src_dot_components_dot_Filter_dot_FilterContent_dot_key": {
+    "context": "key-value field input",
+    "string": "Key"
+  },
+  "src_dot_components_dot_Filter_dot_FilterContent_dot_value": {
+    "context": "key-value field input",
+    "string": "Value"
+  },
   "src_dot_components_dot_Filter_dot_UNKNOWN_ERROR": {
     "context": "filters error messages unknown error",
     "string": "Unknown error occurred"
@@ -2231,6 +2231,18 @@
   "src_dot_components_dot_Filter_dot_VALUE_REQUIRED": {
     "context": "filters error messages value required",
     "string": "Choose a value"
+  },
+  "src_dot_components_dot_Filter_dot_add": {
+    "context": "key-value field button add more key-value pairs",
+    "string": "Add more"
+  },
+  "src_dot_components_dot_Filter_dot_key": {
+    "context": "key-value field input",
+    "string": "Key"
+  },
+  "src_dot_components_dot_Filter_dot_value": {
+    "context": "key-value field input",
+    "string": "Value"
   },
   "src_dot_components_dot_Form_dot_cancelButton": {
     "context": "ExitFormPrompt cancel button",
@@ -4301,6 +4313,70 @@
   "src_dot_orders_dot_components_dot_OrderCannotCancelOrderDialog_dot_775268031": {
     "string": "There are still fulfillments created for this order. Cancel the fulfillments first before you cancel the order."
   },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_canceled": {
+    "context": "canceled fulfillment, section header",
+    "string": "Canceled ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_fulfilled": {
+    "context": "section header",
+    "string": "Fulfilled ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_fulfilledFrom": {
+    "context": "fulfilled fulfillment, section header",
+    "string": "Fulfilled from {warehouseName}"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_refunded": {
+    "context": "refunded fulfillment, section header",
+    "string": "Refunded ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_refundedAndReturned": {
+    "context": "cancelled fulfillment, section header",
+    "string": "Refunded and Returned ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_replaced": {
+    "context": "refunded fulfillment, section header",
+    "string": "Replaced ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_returned": {
+    "context": "refunded fulfillment, section header",
+    "string": "Returned ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_unfulfilled": {
+    "context": "section header",
+    "string": "Unfulfilled ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderCardTitle_dot_waitingForApproval": {
+    "context": "unapproved fulfillment, section header",
+    "string": "Waiting for approval ({quantity})"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_currentSelection": {
+    "context": "label for currently selected warehouse",
+    "string": "currently selected"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_dialogDescription": {
+    "context": "change warehouse dialog description",
+    "string": "Choose warehouse you want to fulfill this order from"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_dialogTitle": {
+    "context": "change warehouse dialog title",
+    "string": "Change warehouse"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_multipleProductsUnavailable": {
+    "context": "warehouse label when multiple products are unavailable",
+    "string": "{productCount} products are unavailable at this location"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_productUnavailable": {
+    "context": "warehouse label when one product is unavailable",
+    "string": "{productName} is unavailable at this location"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_searchFieldPlaceholder": {
+    "context": "change warehouse dialog search placeholder",
+    "string": "Search warehouses"
+  },
+  "src_dot_orders_dot_components_dot_OrderChangeWarehouseDialog_dot_warehouseListLabel": {
+    "context": "change warehouse dialog warehouse list label",
+    "string": "Warehouses A to Z"
+  },
   "src_dot_orders_dot_components_dot_OrderChannelSectionCard_dot_1243773440": {
     "context": "section header",
     "string": "Sales channel"
@@ -4588,6 +4664,18 @@
     "context": "button",
     "string": "Finalize"
   },
+  "src_dot_orders_dot_components_dot_OrderFulfillLine_dot_deletedVariantWarning": {
+    "context": "tooltip content when line's variant has been deleted",
+    "string": "This variant no longer exists. You can still fulfill it."
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillLine_dot_preorderWarning": {
+    "context": "tooltip content when product is in preorder",
+    "string": "This product is still in preorder. You will be able to fulfill it after it reaches it’s release date"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_fulfillingFrom": {
+    "context": "Support text under page header",
+    "string": "Fulfilling from {warehouseName}"
+  },
   "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_headerOrder": {
     "context": "page header",
     "string": "Order"
@@ -4612,6 +4700,10 @@
     "context": "name",
     "string": "Product name"
   },
+  "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_quantity": {
+    "context": "Header row quantity label",
+    "string": "Quantity"
+  },
   "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_quantityToFulfill": {
     "context": "quantity of fulfilled products",
     "string": "Quantity to fulfill"
@@ -4620,9 +4712,17 @@
     "context": "checkbox label",
     "string": "Send shipment details to customer"
   },
+  "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_shipmentInformation": {
+    "context": "Shipment information card header",
+    "string": "Shipment information"
+  },
   "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_sku": {
     "context": "product's sku",
     "string": "SKU"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_stock": {
+    "context": "Header row stock label",
+    "string": "Stock"
   },
   "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_submitFulfillment": {
     "context": "fulfill order, button",
@@ -4631,6 +4731,46 @@
   "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_submitPrepareFulfillment": {
     "context": "prepare order fulfillment, button",
     "string": "Prepare fulfillment"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillPage_dot_trackingNumber": {
+    "context": "Tracking number input label",
+    "string": "Tracking number"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_availableStockLabel": {
+    "context": "table header available stock label",
+    "string": "Available"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_cancelButton": {
+    "context": "cancel button label",
+    "string": "Cancel"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_fulfillButton": {
+    "context": "fulfill button label",
+    "string": "Fulfill anyway"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_infoLabel": {
+    "context": "stock exceeded dialog description",
+    "string": "Stock for items shown below are not enough to prepare fulfillment:"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_productLabel": {
+    "context": "table header product label",
+    "string": "Product"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_questionLabel": {
+    "context": "stock exceeded action question label",
+    "string": "Are you sure you want to fulfill those products anyway?"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_requiredStockLabel": {
+    "context": "table header required stock label",
+    "string": "Required"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_title": {
+    "context": "stock exceeded dialog title",
+    "string": "Not enough stock"
+  },
+  "src_dot_orders_dot_components_dot_OrderFulfillStockExceededDialog_dot_warehouseStockLabel": {
+    "context": "table header warehouse stock label",
+    "string": "Warehouse stock"
   },
   "src_dot_orders_dot_components_dot_OrderFulfilledProductsCard_dot_addTracking": {
     "context": "add tracking button",
@@ -4941,6 +5081,9 @@
   "src_dot_orders_dot_components_dot_OrderListPage_dot_giftCardPaid": {
     "context": "order",
     "string": "Paid with Gift Card"
+  },
+  "src_dot_orders_dot_components_dot_OrderListPage_dot_metadata": {
+    "string": "Metadata"
   },
   "src_dot_orders_dot_components_dot_OrderListPage_dot_placed": {
     "context": "order",
@@ -5330,41 +5473,13 @@
     "context": "button",
     "string": "Set maximal quantities"
   },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_cancelled": {
-    "context": "cancelled fulfillment, section header",
-    "string": "Cancelled ({quantity})"
-  },
   "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_description": {
     "context": "product no longer exists error description",
     "string": "This product is no longer in database so it can’t be replaced, nor returned"
   },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_fulfilled": {
-    "context": "section header",
-    "string": "Fulfilled ({quantity})"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_fulfilledFrom": {
-    "context": "fulfilled fulfillment, section header",
-    "string": "Fulfilled from {warehouseName}"
-  },
   "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_improperValue": {
     "context": "error message",
     "string": "Improper value"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_refunded": {
-    "context": "refunded fulfillment, section header",
-    "string": "Refunded ({quantity})"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_refundedAndReturned": {
-    "context": "cancelled fulfillment, section header",
-    "string": "Refunded and Returned ({quantity})"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_replaced": {
-    "context": "refunded fulfillment, section header",
-    "string": "Replaced ({quantity})"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_returned": {
-    "context": "refunded fulfillment, section header",
-    "string": "Returned ({quantity})"
   },
   "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_title": {
     "context": "product no longer exists error title",
@@ -5377,14 +5492,6 @@
   "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_titleUnfulfilled": {
     "context": "section header",
     "string": "Unfulfilled Items"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_unfulfilled": {
-    "context": "section header",
-    "string": "Unfulfilled"
-  },
-  "src_dot_orders_dot_components_dot_OrderReturnPage_dot_OrderReturnRefundItemsCard_dot_waitingForApproval": {
-    "context": "unapproved fulfillment, section header",
-    "string": "Waiting for approval ({quantity})"
   },
   "src_dot_orders_dot_components_dot_OrderReturnPage_dot_appTitle": {
     "context": "page header with order number",
@@ -6407,6 +6514,9 @@
     "context": "product kind",
     "string": "Product Kind"
   },
+  "src_dot_products_dot_components_dot_ProductListPage_dot_metadata": {
+    "string": "Metadata"
+  },
   "src_dot_products_dot_components_dot_ProductListPage_dot_outOfStock": {
     "context": "product status",
     "string": "Out Of Stock"
@@ -7089,6 +7199,10 @@
   "src_dot_requiredField": {
     "string": "This field is required"
   },
+  "src_dot_reset": {
+    "context": "button",
+    "string": "Reset"
+  },
   "src_dot_returned": {
     "context": "order status",
     "string": "Returned"
@@ -7565,21 +7679,6 @@
     "context": "input helper text",
     "string": "Leaving this setting empty will mean that stock won’t be reserved"
   },
-  "src_dot_siteSettings_dot_components_dot_SiteDetailsSettingsCard_dot_1008586926": {
-    "string": "Name of your store is shown on tab in web browser"
-  },
-  "src_dot_siteSettings_dot_components_dot_SiteDetailsSettingsCard_dot_1170194728": {
-    "string": "Store domain"
-  },
-  "src_dot_siteSettings_dot_components_dot_SiteDetailsSettingsCard_dot_2286355060": {
-    "string": "Name of your store"
-  },
-  "src_dot_siteSettings_dot_components_dot_SiteDetailsSettingsCard_dot_3868874271": {
-    "string": "Store description"
-  },
-  "src_dot_siteSettings_dot_components_dot_SiteDetailsSettingsCard_dot_529433178": {
-    "string": "Store description is shown on taskbar after your store name"
-  },
   "src_dot_siteSettings_dot_components_dot_SiteSettingsPage_dot_229184360": {
     "context": "section header",
     "string": "Store Information"
@@ -7599,10 +7698,6 @@
   "src_dot_siteSettings_dot_components_dot_SiteSettingsPage_dot_sectionCompanyTitle": {
     "context": "section title",
     "string": "Company Information"
-  },
-  "src_dot_siteSettings_dot_components_dot_SiteSettingsPage_dot_sectionDetailsDescription": {
-    "context": "section description",
-    "string": "These are general information about your store. They define what is the URL of your store and what is shown in browsers taskbar."
   },
   "src_dot_somethingWentWrong": {
     "string": "Saleor ran into an unexpected problem"

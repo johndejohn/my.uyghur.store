@@ -21,6 +21,7 @@ import useLocalPaginator, {
 } from "@saleor/hooks/useLocalPaginator";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
+import { PaginatorContext } from "@saleor/hooks/usePaginator";
 import { commonMessages, errorMessages } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
 import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
@@ -32,14 +33,13 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { PAGINATE_BY } from "../../config";
 import { extractMutationErrors, maybe } from "../../misc";
-import { productAddUrl, productUrl } from "../../products/urls";
+import { productAddUrl } from "../../products/urls";
 import {
   CategoryPageTab,
   CategoryUpdatePage
 } from "../components/CategoryUpdatePage/CategoryUpdatePage";
 import { CategoryUpdateData } from "../components/CategoryUpdatePage/form";
 import {
-  categoryAddUrl,
   categoryListUrl,
   categoryUrl,
   CategoryUrlDialog,
@@ -99,6 +99,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
       notify({
         status: "success",
         text: intl.formatMessage({
+          id: "HvJPcU",
           defaultMessage: "Category deleted"
         })
       });
@@ -174,7 +175,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
     CategoryUrlQueryParams
   >(navigate, params => categoryUrl(id, params), params);
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
+  const { pageInfo, ...paginationFunctions } = paginate(
     activeTab === CategoryPageTab.categories
       ? maybe(() => data.category.children.pageInfo)
       : maybe(() => data.category.products.pageInfo),
@@ -208,22 +209,16 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
   );
 
   return (
-    <>
+    <PaginatorContext.Provider value={{ ...pageInfo, ...paginationFunctions }}>
       <WindowTitle title={maybe(() => data.category.name)} />
       <CategoryUpdatePage
+        categoryId={id}
         changeTab={changeTab}
         currentTab={activeTab}
         category={maybe(() => data.category)}
         disabled={loading}
         errors={updateResult.data?.categoryUpdate.errors || []}
-        onAddCategory={() => navigate(categoryAddUrl(id))}
-        onAddProduct={() => navigate(productAddUrl())}
-        onBack={() =>
-          navigate(
-            maybe(() => categoryUrl(data.category.parent.id), categoryListUrl())
-          )
-        }
-        onCategoryClick={id => () => navigate(categoryUrl(id))}
+        addProductHref={productAddUrl()}
         onDelete={() => openModal("delete")}
         onImageDelete={() =>
           updateCategory({
@@ -245,10 +240,6 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
             }
           })
         }
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
-        pageInfo={pageInfo}
-        onProductClick={id => () => navigate(productUrl(id))}
         onSubmit={handleSubmit}
         products={mapEdgesToItems(data?.category?.products)}
         saveButtonBarState={updateResult.status}
@@ -291,6 +282,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
         onConfirm={() => deleteCategory({ variables: { id } })}
         open={params.action === "delete"}
         title={intl.formatMessage({
+          id: "xo5UIb",
           defaultMessage: "Delete category",
           description: "dialog title"
         })}
@@ -298,6 +290,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
       >
         <DialogContentText>
           <FormattedMessage
+            id="xRkj2h"
             defaultMessage="Are you sure you want to delete {categoryName}?"
             values={{
               categoryName: (
@@ -307,7 +300,10 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
           />
         </DialogContentText>
         <DialogContentText>
-          <FormattedMessage defaultMessage="Remember this will also unpin all products assigned to this category, making them unavailable in storefront." />
+          <FormattedMessage
+            id="3DGvA/"
+            defaultMessage="Remember this will also unpin all products assigned to this category, making them unavailable in storefront."
+          />
         </DialogContentText>
       </ActionDialog>
       <ActionDialog
@@ -323,6 +319,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
           }).then(() => refetch())
         }
         title={intl.formatMessage({
+          id: "sG0w22",
           defaultMessage: "Delete categories",
           description: "dialog title"
         })}
@@ -330,6 +327,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
       >
         <DialogContentText>
           <FormattedMessage
+            id="Pp/7T7"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this category?} other{Are you sure you want to delete {displayQuantity} categories?}}"
             values={{
               counter: maybe(() => params.ids.length),
@@ -338,7 +336,10 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
           />
         </DialogContentText>
         <DialogContentText>
-          <FormattedMessage defaultMessage="Remember this will also delete all products assigned to this category." />
+          <FormattedMessage
+            id="e+L+q3"
+            defaultMessage="Remember this will also delete all products assigned to this category."
+          />
         </DialogContentText>
       </ActionDialog>
       <ActionDialog
@@ -351,6 +352,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
           }).then(() => refetch())
         }
         title={intl.formatMessage({
+          id: "KCjd1o",
           defaultMessage: "Delete products",
           description: "dialog title"
         })}
@@ -358,6 +360,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
       >
         <DialogContentText>
           <FormattedMessage
+            id="7l5Bh9"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this product?} other{Are you sure you want to delete {displayQuantity} products?}}"
             values={{
               counter: maybe(() => params.ids.length),
@@ -366,7 +369,7 @@ export const CategoryDetails: React.FC<CategoryDetailsProps> = ({
           />
         </DialogContentText>
       </ActionDialog>
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default CategoryDetails;

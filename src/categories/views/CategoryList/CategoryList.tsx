@@ -14,7 +14,8 @@ import useListSettings from "@saleor/hooks/useListSettings";
 import useNavigator from "@saleor/hooks/useNavigator";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
 import { maybe } from "@saleor/misc";
@@ -28,12 +29,10 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import { CategoryListPage } from "../../components/CategoryListPage/CategoryListPage";
 import {
-  categoryAddUrl,
   categoryListUrl,
   CategoryListUrlDialog,
   CategoryListUrlFilters,
-  CategoryListUrlQueryParams,
-  categoryUrl
+  CategoryListUrlQueryParams
 } from "../../urls";
 import {
   deleteFilterTab,
@@ -51,7 +50,6 @@ interface CategoryListProps {
 
 export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
   const navigate = useNavigator();
-  const paginate = usePaginator();
 
   const { isSelected, listElements, toggle, toggleAll, reset } = useBulkActions(
     params.ids
@@ -119,11 +117,11 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
     handleTabChange(tabs.length + 1);
   };
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.categories.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.categories.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const handleCategoryBulkDelete = (data: CategoryBulkDeleteMutation) => {
     if (data.categoryBulkDelete.errors.length === 0) {
@@ -143,7 +141,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
   const handleSort = createSortHandler(navigate, categoryListUrl, params);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <CategoryListPage
         categories={mapEdgesToItems(data?.categories)}
         currentTab={currentTab}
@@ -156,14 +154,9 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
         tabs={tabs.map(tab => tab.name)}
         settings={settings}
         sort={getSortParams(params)}
-        onAdd={() => navigate(categoryAddUrl())}
-        onRowClick={id => () => navigate(categoryUrl(id))}
         onSort={handleSort}
         disabled={loading}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onUpdateListSettings={updateListSettings}
-        pageInfo={pageInfo}
         isChecked={isSelected}
         selected={listElements.length}
         toggle={toggle}
@@ -203,6 +196,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
         }
         open={params.action === "delete"}
         title={intl.formatMessage({
+          id: "sG0w22",
           defaultMessage: "Delete categories",
           description: "dialog title"
         })}
@@ -210,6 +204,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
       >
         <DialogContentText>
           <FormattedMessage
+            id="Pp/7T7"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this category?} other{Are you sure you want to delete {displayQuantity} categories?}}"
             values={{
               counter: maybe(() => params.ids.length),
@@ -218,7 +213,10 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
           />
         </DialogContentText>
         <DialogContentText>
-          <FormattedMessage defaultMessage="Remember this will also delete all products assigned to this category." />
+          <FormattedMessage
+            id="e+L+q3"
+            defaultMessage="Remember this will also delete all products assigned to this category."
+          />
         </DialogContentText>
       </ActionDialog>
       <SaveFilterTabDialog
@@ -234,7 +232,7 @@ export const CategoryList: React.FC<CategoryListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default CategoryList;

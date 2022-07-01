@@ -1,5 +1,6 @@
 import { PluginConfigurationType } from "@saleor/graphql";
 import { PluginListUrlSortField } from "@saleor/plugins/urls";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -43,7 +44,6 @@ const props: PluginsListPageProps = {
       value: PluginConfigurationType.GLOBAL
     }
   },
-  onBack: () => undefined,
   plugins: pluginList,
   sort: {
     ...sortPageProps.sort,
@@ -53,6 +53,7 @@ const props: PluginsListPageProps = {
 
 storiesOf("Views / Plugins / Plugin list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <PluginsListPage {...props} />)
   .add("loading", () => (
     <PluginsListPage {...props} disabled={true} plugins={undefined} />

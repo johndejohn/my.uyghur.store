@@ -48,20 +48,22 @@ export enum ListViews {
 
 export interface ListProps<TColumns extends string = string> {
   disabled: boolean;
-  pageInfo?: {
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
-  };
   settings?: ListSettings<TColumns>;
-  onNextPage: () => void;
-  onPreviousPage: () => void;
-  onRowClick: (id: string) => () => void;
   onUpdateListSettings?: <T extends keyof ListSettings<TColumns>>(
     key: T,
     value: ListSettings<TColumns>[T]
   ) => void;
   onListSettingsReset?: () => void;
   filterDependency?: FilterElement;
+}
+
+export interface PaginateListProps {
+  pageInfo?: {
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+  onNextPage: () => void;
+  onPreviousPage: () => void;
 }
 
 export interface SortPage<TSortKey extends string> {
@@ -91,7 +93,6 @@ export interface ListActions extends ListActionsWithoutToolbar {
 export interface PageListProps<TColumns extends string = string>
   extends ListProps<TColumns> {
   defaultSettings?: ListSettings<TColumns>;
-  onAdd: () => void;
 }
 
 export interface SearchProps {

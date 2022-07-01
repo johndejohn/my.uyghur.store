@@ -102,7 +102,7 @@ const useStyles = makeStyles<ProductVariantCreatorSummaryProps, ClassKey>(
         `minmax(180px, auto) repeat(${props.data.variants[0].channelListings
           .length +
           props.data.variants[0].stocks
-            .length}, minmax(180px, auto)) 140px 64px`,
+            .length}, minmax(180px, auto)) 220px 64px`,
       overflowX: "scroll",
       rowGap: theme.spacing(),
       paddingBottom: 3
@@ -152,6 +152,7 @@ const ProductVariantCreatorSummary: React.FC<ProductVariantCreatorSummaryProps> 
     <Card className={classes.card}>
       <CardTitle
         title={intl.formatMessage({
+          id: "S5PVx1",
           defaultMessage: "Created Variants",
           description: "variant creator summary card header"
         })}
@@ -165,6 +166,7 @@ const ProductVariantCreatorSummary: React.FC<ProductVariantCreatorSummaryProps> 
           )}
         >
           <FormattedMessage
+            id="V76IV7"
             defaultMessage="Variant"
             description="variant name"
           />
@@ -180,6 +182,7 @@ const ProductVariantCreatorSummary: React.FC<ProductVariantCreatorSummaryProps> 
             )}
           >
             <FormattedMessage
+              id="CrbI/c"
               defaultMessage="{channel} Price"
               description="variant channel price"
               values={{
@@ -204,7 +207,7 @@ const ProductVariantCreatorSummary: React.FC<ProductVariantCreatorSummaryProps> 
         <div
           className={classNames(classes.col, classes.colHeader, classes.colSku)}
         >
-          <FormattedMessage defaultMessage="SKU" />
+          <FormattedMessage id="k4brJy" defaultMessage="SKU" />
         </div>
         <div className={classNames(classes.col, classes.colHeader)} />
         <Hr className={classes.hr} />

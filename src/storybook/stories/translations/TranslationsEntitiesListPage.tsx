@@ -1,4 +1,5 @@
 import { LanguageCodeEnum } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -28,12 +29,12 @@ const props: TranslationsEntitiesListPageProps = {
     __typename: "LanguageDisplay",
     code: LanguageCodeEnum.EN,
     language: "English"
-  },
-  onBack: () => undefined
+  }
 };
 
 storiesOf("Views / Translations / Entity list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => (
     <TranslationsEntitiesListPage {...props}>
       <TranslationsEntitiesList
@@ -50,13 +51,7 @@ storiesOf("Views / Translations / Entity list", module)
             name: "Brown Supreme Hoodie"
           }
         ]}
-        onRowClick={() => undefined}
-        onNextPage={() => undefined}
-        onPreviousPage={() => undefined}
-        pageInfo={{
-          hasNextPage: true,
-          hasPreviousPage: false
-        }}
+        getRowHref={() => ""}
       />
     </TranslationsEntitiesListPage>
   ));

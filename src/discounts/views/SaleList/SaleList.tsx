@@ -13,7 +13,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -29,11 +30,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import SaleListPage from "../../components/SaleListPage";
 import {
-  saleAddUrl,
   saleListUrl,
   SaleListUrlDialog,
-  SaleListUrlQueryParams,
-  saleUrl
+  SaleListUrlQueryParams
 } from "../../urls";
 import {
   deleteFilterTab,
@@ -54,7 +53,6 @@ interface SaleListProps {
 export const SaleList: React.FC<SaleListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids
   );
@@ -143,11 +141,11 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
 
   const canOpenBulkActionDialog = maybe(() => params.ids.length > 0);
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.sales.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.sales.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const [saleBulkDelete, saleBulkDeleteOpts] = useSaleBulkDeleteMutation({
     onCompleted: data => {
@@ -173,7 +171,7 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
     });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <WindowTitle title={intl.formatMessage(sectionNames.sales)} />
       <SaleListPage
         currentTab={currentTab}
@@ -189,13 +187,8 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
         sales={mapEdgesToItems(data?.sales)}
         settings={settings}
         disabled={loading}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(saleAddUrl())}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onSort={handleSort}
         onUpdateListSettings={updateListSettings}
-        onRowClick={id => () => navigate(saleUrl(id))}
         isChecked={isSelected}
         selected={listElements.length}
         sort={getSortParams(params)}
@@ -222,6 +215,7 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
         onConfirm={onSaleBulkDelete}
         open={params.action === "remove" && canOpenBulkActionDialog}
         title={intl.formatMessage({
+          id: "ZWIjvr",
           defaultMessage: "Delete Sales",
           description: "dialog header"
         })}
@@ -230,6 +224,7 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
         {canOpenBulkActionDialog && (
           <DialogContentText>
             <FormattedMessage
+              id="FPzzh7"
               defaultMessage="{counter,plural,one{Are you sure you want to delete this sale?} other{Are you sure you want to delete {displayQuantity} sales?}}"
               description="dialog content"
               values={{
@@ -253,7 +248,7 @@ export const SaleList: React.FC<SaleListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default SaleList;

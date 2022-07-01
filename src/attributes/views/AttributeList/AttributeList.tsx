@@ -11,7 +11,6 @@ import DeleteFilterTabDialog from "@saleor/components/DeleteFilterTabDialog";
 import SaveFilterTabDialog, {
   SaveFilterTabDialogFormData
 } from "@saleor/components/SaveFilterTabDialog";
-import { configurationMenuUrl } from "@saleor/configuration";
 import {
   useAttributeBulkDeleteMutation,
   useAttributeListQuery
@@ -19,7 +18,8 @@ import {
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
 import createDialogActionHandlers from "@saleor/utils/handlers/dialogActionHandlers";
@@ -36,11 +36,9 @@ import { maybe } from "../../../misc";
 import AttributeBulkDeleteDialog from "../../components/AttributeBulkDeleteDialog";
 import AttributeListPage from "../../components/AttributeListPage";
 import {
-  attributeAddUrl,
   attributeListUrl,
   AttributeListUrlDialog,
-  AttributeListUrlQueryParams,
-  attributeUrl
+  AttributeListUrlQueryParams
 } from "../../urls";
 import { getFilterQueryParam } from "./filters";
 import { getSortQueryVariables } from "./sort";
@@ -51,7 +49,6 @@ interface AttributeListProps {
 
 const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
   const navigate = useNavigator();
-  const paginate = usePaginator();
   const notify = useNotifier();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids
@@ -81,6 +78,7 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
         notify({
           status: "success",
           text: intl.formatMessage({
+            id: "lw9WIk",
             defaultMessage: "Attributes successfully delete",
             description: "deleted multiple attributes"
           })
@@ -133,16 +131,16 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
     handleTabChange(tabs.length + 1);
   };
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.attributes.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.attributes.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const handleSort = createSortHandler(navigate, attributeListUrl, params);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <AttributeListPage
         attributes={mapEdgesToItems(data?.attributes)}
         currentTab={currentTab}
@@ -150,19 +148,13 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
         filterOpts={getFilterOpts(params)}
         initialSearch={params.query || ""}
         isChecked={isSelected}
-        onAdd={() => navigate(attributeAddUrl())}
         onAll={resetFilters}
-        onBack={() => navigate(configurationMenuUrl)}
         onFilterChange={changeFilters}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
-        onRowClick={id => () => navigate(attributeUrl(id))}
         onSearchChange={handleSearchChange}
         onSort={handleSort}
         onTabChange={handleTabChange}
         onTabDelete={() => openModal("delete-search")}
         onTabSave={() => openModal("save-search")}
-        pageInfo={pageInfo}
         selected={listElements.length}
         sort={getSortParams(params)}
         tabs={tabs.map(tab => tab.name)}
@@ -204,7 +196,7 @@ const AttributeList: React.FC<AttributeListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 AttributeList.displayName = "AttributeList";

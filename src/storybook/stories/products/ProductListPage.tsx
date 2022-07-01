@@ -4,6 +4,7 @@ import { products as productListFixture } from "@saleor/products/fixtures";
 import { ProductListUrlSortField } from "@saleor/products/urls";
 import { productListFilterOpts } from "@saleor/products/views/ProductList/fixtures";
 import { attributes } from "@saleor/productTypes/fixtures";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { ListViews } from "@saleor/types";
 import { storiesOf } from "@storybook/react";
 import React from "react";
@@ -38,7 +39,6 @@ const props: ProductListPageProps = {
   },
   activeAttributeSortId: undefined,
   availableInGridAttributes: attributes,
-  channelsCount: 6,
   columnQuery: "",
   onColumnQueryChange: () => undefined,
   currencySymbol: "USD",
@@ -58,6 +58,7 @@ const props: ProductListPageProps = {
 
 storiesOf("Views / Products / Product list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <ProductListPage {...props} />)
   .add("loading", () => (
     <ProductListPage
@@ -72,7 +73,6 @@ storiesOf("Views / Products / Product list", module)
   .add("no channels", () => (
     <ProductListPage
       {...props}
-      channelsCount={0}
       selectedChannelId={""}
       products={products.map(product => ({ ...product, channelListings: [] }))}
     />

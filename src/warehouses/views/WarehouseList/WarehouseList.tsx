@@ -4,7 +4,6 @@ import SaveFilterTabDialog, {
 } from "@saleor/components/SaveFilterTabDialog";
 import { useShopLimitsQuery } from "@saleor/components/Shop/queries";
 import { WindowTitle } from "@saleor/components/WindowTitle";
-import { configurationMenuUrl } from "@saleor/configuration";
 import {
   useWarehouseDeleteMutation,
   useWarehouseListQuery
@@ -14,7 +13,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { getMutationStatus, maybe } from "@saleor/misc";
@@ -28,11 +28,9 @@ import { getSortParams } from "@saleor/utils/sort";
 import WarehouseDeleteDialog from "@saleor/warehouses/components/WarehouseDeleteDialog";
 import WarehouseListPage from "@saleor/warehouses/components/WarehouseListPage";
 import {
-  warehouseAddUrl,
   warehouseListUrl,
   WarehouseListUrlDialog,
-  WarehouseListUrlQueryParams,
-  warehouseUrl
+  WarehouseListUrlQueryParams
 } from "@saleor/warehouses/urls";
 import React from "react";
 import { useIntl } from "react-intl";
@@ -54,7 +52,6 @@ export interface WarehouseListProps {
 const WarehouseList: React.FC<WarehouseListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { updateListSettings, settings } = useListSettings(
     ListViews.SALES_LIST
   );
@@ -128,25 +125,24 @@ const WarehouseList: React.FC<WarehouseListProps> = ({ params }) => {
     handleTabChange(tabs.length + 1);
   };
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.warehouses.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.warehouses.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const handleSort = createSortHandler(navigate, warehouseListUrl, params);
 
   const deleteTransitionState = getMutationStatus(deleteWarehouseOpts);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <WindowTitle title={intl.formatMessage(sectionNames.warehouses)} />
       <WarehouseListPage
         currentTab={currentTab}
         initialSearch={params.query || ""}
         onSearchChange={handleSearchChange}
         onAll={resetFilters}
-        onBack={() => navigate(configurationMenuUrl)}
         onTabChange={handleTabChange}
         onTabDelete={() => openModal("delete-search")}
         onTabSave={() => openModal("save-search")}
@@ -155,14 +151,9 @@ const WarehouseList: React.FC<WarehouseListProps> = ({ params }) => {
         warehouses={mapEdgesToItems(data?.warehouses)}
         settings={settings}
         disabled={loading}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(warehouseAddUrl)}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onRemove={id => openModal("delete", { id })}
         onSort={handleSort}
         onUpdateListSettings={updateListSettings}
-        onRowClick={id => () => navigate(warehouseUrl(id))}
         sort={getSortParams(params)}
       />
       <WarehouseDeleteDialog
@@ -191,7 +182,7 @@ const WarehouseList: React.FC<WarehouseListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 

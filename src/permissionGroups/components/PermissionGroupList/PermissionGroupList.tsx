@@ -7,12 +7,17 @@ import {
 } from "@material-ui/core";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableCellHeader from "@saleor/components/TableCellHeader";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { PermissionGroupFragment } from "@saleor/graphql";
 import { DeleteIcon, IconButton, makeStyles } from "@saleor/macaw-ui";
 import { maybe, renderCollection, stopPropagation } from "@saleor/misc";
-import { PermissionGroupListUrlSortField } from "@saleor/permissionGroups/urls";
+import {
+  permissionGroupDetailsUrl,
+  PermissionGroupListUrlSortField
+} from "@saleor/permissionGroups/urls";
 import { ListProps, SortPage } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
@@ -60,17 +65,7 @@ interface PermissionGroupListProps
 }
 
 const PermissionGroupList: React.FC<PermissionGroupListProps> = props => {
-  const {
-    disabled,
-    permissionGroups,
-    pageInfo,
-    onDelete,
-    onNextPage,
-    onPreviousPage,
-    onRowClick,
-    onSort,
-    sort
-  } = props;
+  const { disabled, permissionGroups, onDelete, onSort, sort } = props;
   const classes = useStyles(props);
 
   return (
@@ -88,28 +83,24 @@ const PermissionGroupList: React.FC<PermissionGroupListProps> = props => {
             className={classes.colName}
           >
             <FormattedMessage
+              id="szXISP"
               defaultMessage="Permission Group Name"
               description="permission group name"
             />
           </TableCellHeader>
           <TableCellHeader className={classes.colMembers} textAlign="right">
-            <FormattedMessage defaultMessage="Members" />
+            <FormattedMessage id="+a+2ug" defaultMessage="Members" />
           </TableCellHeader>
           <TableCell className={classes.colActionsHeader}>
-            <FormattedMessage defaultMessage="Actions" />
+            <FormattedMessage id="wL7VAE" defaultMessage="Actions" />
           </TableCell>
         </TableRow>
       </TableHead>
       <TableFooter>
         <TableRow>
-          <TablePagination
+          <TablePaginationWithContext
             colSpan={numberOfColumns}
-            hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-            onNextPage={onNextPage}
-            hasPreviousPage={
-              pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-            }
-            onPreviousPage={onPreviousPage}
+            disabled={disabled}
           />
         </TableRow>
       </TableFooter>
@@ -117,12 +108,12 @@ const PermissionGroupList: React.FC<PermissionGroupListProps> = props => {
         {renderCollection(
           permissionGroups,
           permissionGroup => (
-            <TableRow
+            <TableRowLink
               className={!!permissionGroup ? classes.link : undefined}
               hover={!!permissionGroup}
               key={permissionGroup ? permissionGroup.id : "skeleton"}
-              onClick={
-                permissionGroup ? onRowClick(permissionGroup.id) : undefined
+              href={
+                permissionGroup && permissionGroupDetailsUrl(permissionGroup.id)
               }
               data-test-id={"id-" + maybe(() => permissionGroup.id)}
             >
@@ -146,28 +137,33 @@ const PermissionGroupList: React.FC<PermissionGroupListProps> = props => {
                 {permissionGroup ? (
                   <>
                     {permissionGroup.userCanManage && (
-                      <IconButton
-                        variant="secondary"
-                        data-test-id="delete-icon"
-                        color="primary"
-                        onClick={stopPropagation(() =>
-                          onDelete(permissionGroup.id)
-                        )}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <TableButtonWrapper>
+                        <IconButton
+                          variant="secondary"
+                          data-test-id="delete-icon"
+                          color="primary"
+                          onClick={stopPropagation(() =>
+                            onDelete(permissionGroup.id)
+                          )}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableButtonWrapper>
                     )}
                   </>
                 ) : (
                   <Skeleton />
                 )}
               </TableCell>
-            </TableRow>
+            </TableRowLink>
           ),
           () => (
             <TableRow>
               <TableCell colSpan={numberOfColumns}>
-                <FormattedMessage defaultMessage="No permission groups found" />
+                <FormattedMessage
+                  id="CXn88q"
+                  defaultMessage="No permission groups found"
+                />
               </TableCell>
             </TableRow>
           )

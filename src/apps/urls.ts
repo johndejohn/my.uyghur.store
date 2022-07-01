@@ -5,7 +5,12 @@ import { ActiveTab, Dialog, Pagination, SingleAction } from "../types";
 
 export const MANIFEST_ATTR = "manifestUrl";
 
-export type AppListUrlDialog = "remove" | "remove-app" | "remove-custom-app";
+export type AppListUrlDialog =
+  | "remove"
+  | "remove-app"
+  | "remove-custom-app"
+  | "app-activate"
+  | "app-deactivate";
 
 export type AppDetailsUrlDialog = "app-activate" | "app-deactivate";
 
@@ -49,9 +54,6 @@ export const appInstallUrl = appInstallPath;
 
 export const appDetailsUrl = (id: string, params?: AppDetailsUrlQueryParams) =>
   appDetailsPath(encodeURIComponent(id)) + "?" + stringifyQs(params);
-
-export const appSettingsUrl = (id: string, params?: AppDetailsUrlQueryParams) =>
-  appSettingsPath(encodeURIComponent(id)) + "?" + stringifyQs(params);
 
 export const appUrl = (id: string, params?: AppDetailsUrlQueryParams) =>
   appPath(encodeURIComponent(id)) + "?" + stringifyQs(params);

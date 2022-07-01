@@ -1,4 +1,5 @@
 import { WeightUnitsEnum } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -17,8 +18,6 @@ const props: ShippingZonesListPageProps = {
   ...listActionsProps,
   ...pageListProps.default,
   defaultWeightUnit: WeightUnitsEnum.KG,
-  onAdd: () => undefined,
-  onBack: () => undefined,
   onRemove: () => undefined,
   onSubmit: () => undefined,
   shippingZones,
@@ -27,6 +26,7 @@ const props: ShippingZonesListPageProps = {
 
 storiesOf("Views / Shipping / Shipping zones list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <ShippingZonesListPage {...props} />)
   .add("loading", () => (
     <ShippingZonesListPage

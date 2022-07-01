@@ -10,11 +10,12 @@ import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
 import TableCellHeader from "@saleor/components/TableCellHeader";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { PageFragment } from "@saleor/graphql";
 import { makeStyles, Pill } from "@saleor/macaw-ui";
 import { maybe, renderCollection } from "@saleor/misc";
-import { PageListUrlSortField } from "@saleor/pages/urls";
+import { PageListUrlSortField, pageUrl } from "@saleor/pages/urls";
 import { ListActions, ListProps, SortPage } from "@saleor/types";
 import { getArrowDirection } from "@saleor/utils/sort";
 import React from "react";
@@ -57,12 +58,8 @@ const PageList: React.FC<PageListProps> = props => {
     settings,
     pages,
     disabled,
-    onNextPage,
-    pageInfo,
-    onRowClick,
     onSort,
     onUpdateListSettings,
-    onPreviousPage,
     isChecked,
     selected,
     sort,
@@ -96,6 +93,7 @@ const PageList: React.FC<PageListProps> = props => {
             className={classes.colTitle}
           >
             <FormattedMessage
+              id="V2+HTM"
               defaultMessage="Title"
               description="dialog header"
             />
@@ -111,6 +109,7 @@ const PageList: React.FC<PageListProps> = props => {
             className={classes.colSlug}
           >
             <FormattedMessage
+              id="I8dAAe"
               defaultMessage="Slug"
               description="page internal name"
             />
@@ -126,6 +125,7 @@ const PageList: React.FC<PageListProps> = props => {
             className={classes.colVisibility}
           >
             <FormattedMessage
+              id="5GSYCR"
               defaultMessage="Visibility"
               description="page status"
             />
@@ -133,16 +133,11 @@ const PageList: React.FC<PageListProps> = props => {
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
+            <TablePaginationWithContext
               colSpan={numberOfColumns}
               settings={settings}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
+              disabled={disabled}
               onUpdateListSettings={onUpdateListSettings}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
             />
           </TableRow>
         </TableFooter>
@@ -153,10 +148,10 @@ const PageList: React.FC<PageListProps> = props => {
               const isSelected = page ? isChecked(page.id) : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   hover={!!page}
                   className={!!page ? classes.link : undefined}
-                  onClick={page ? onRowClick(page.id) : undefined}
+                  href={page && pageUrl(page.id)}
                   key={page ? page.id : "skeleton"}
                   selected={isSelected}
                 >
@@ -181,10 +176,12 @@ const PageList: React.FC<PageListProps> = props => {
                           label={
                             page.isPublished
                               ? intl.formatMessage({
+                                  id: "G1KzEx",
                                   defaultMessage: "Published",
                                   description: "page status"
                                 })
                               : intl.formatMessage({
+                                  id: "UN3qWD",
                                   defaultMessage: "Not Published",
                                   description: "page status"
                                 })
@@ -195,13 +192,16 @@ const PageList: React.FC<PageListProps> = props => {
                       <Skeleton />
                     )}
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (
               <TableRow>
                 <TableCell colSpan={numberOfColumns}>
-                  <FormattedMessage defaultMessage="No pages found" />
+                  <FormattedMessage
+                    id="iMJka8"
+                    defaultMessage="No pages found"
+                  />
                 </TableCell>
               </TableRow>
             )

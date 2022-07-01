@@ -5,7 +5,7 @@ import CardTitle from "@saleor/components/CardTitle";
 import Grid from "@saleor/components/Grid";
 import Hr from "@saleor/components/Hr";
 import Skeleton from "@saleor/components/Skeleton";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
 import { SubmitPromise } from "@saleor/hooks/useForm";
 import { buttonMessages } from "@saleor/intl";
 import {
@@ -26,7 +26,7 @@ import TranslationFieldsShort from "./TranslationFieldsShort";
 
 type Pagination = Pick<
   ListProps,
-  Exclude<keyof ListProps, "onRowClick" | "disabled">
+  Exclude<keyof ListProps, "getRowHref" | "disabled">
 >;
 
 export interface TranslationFieldsProps {
@@ -153,10 +153,11 @@ const TranslationFields: React.FC<TranslationFieldsProps> = props => {
         <CardContent className={classes.cardContent}>
           <Grid className={classes.grid} variant="uniform">
             <Typography className={classes.columnHeader} variant="body1">
-              <FormattedMessage defaultMessage="Original String" />
+              <FormattedMessage id="Xtd0AT" defaultMessage="Original String" />
             </Typography>
             <Typography className={classes.columnHeader} variant="body1">
               <FormattedMessage
+                id="bVY7j0"
                 defaultMessage="Translation"
                 description="Translated Name"
               />
@@ -256,20 +257,8 @@ const TranslationFields: React.FC<TranslationFieldsProps> = props => {
             ))}
           </Grid>
           {pagination && (
-            <TablePagination
+            <TablePaginationWithContext
               colSpan={numberOfColumns}
-              hasNextPage={
-                pagination.pageInfo && !disabled
-                  ? pagination.pageInfo.hasNextPage
-                  : false
-              }
-              onNextPage={pagination.onNextPage}
-              hasPreviousPage={
-                pagination.pageInfo && !disabled
-                  ? pagination.pageInfo.hasPreviousPage
-                  : false
-              }
-              onPreviousPage={pagination.onPreviousPage}
               settings={pagination.settings}
               onUpdateListSettings={pagination.onUpdateListSettings}
               component="div"
@@ -280,6 +269,7 @@ const TranslationFields: React.FC<TranslationFieldsProps> = props => {
         <CardContent>
           <Typography className={classes.cardCaption} variant="caption">
             <FormattedMessage
+              id="bh+Keo"
               defaultMessage="{numberOfFields} Translations, {numberOfTranslatedFields} Completed"
               values={{
                 numberOfFields: fields.length,

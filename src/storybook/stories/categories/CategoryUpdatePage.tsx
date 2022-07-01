@@ -1,5 +1,6 @@
 import placeholderImage from "@assets/images/placeholder255x255.png";
 import { ProductErrorCode } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { mapEdgesToItems } from "@saleor/utils/maps";
 import { storiesOf } from "@storybook/react";
 import React from "react";
@@ -16,25 +17,16 @@ const category = categoryFixture(placeholderImage);
 
 const updateProps: Omit<CategoryUpdatePageProps, "classes"> = {
   category,
+  categoryId: "123",
   changeTab: undefined,
   currentTab: CategoryPageTab.categories,
   disabled: false,
   errors: [],
-  onAddCategory: undefined,
-  onAddProduct: undefined,
-  onBack: () => undefined,
-  onCategoryClick: () => undefined,
+  addProductHref: "",
   onDelete: () => undefined,
   onImageDelete: () => undefined,
   onImageUpload: () => undefined,
-  onNextPage: undefined,
-  onPreviousPage: undefined,
-  onProductClick: () => undefined,
   onSubmit: () => undefined,
-  pageInfo: {
-    hasNextPage: true,
-    hasPreviousPage: true
-  },
   productListToolbar: null,
   products: mapEdgesToItems(category.products),
   saveButtonBarState: "default",
@@ -45,6 +37,7 @@ const updateProps: Omit<CategoryUpdatePageProps, "classes"> = {
 
 storiesOf("Views / Categories / Update category", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <CategoryUpdatePage {...updateProps} />)
   .add("products", () => (
     <CategoryUpdatePage

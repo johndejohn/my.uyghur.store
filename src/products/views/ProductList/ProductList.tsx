@@ -34,7 +34,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { commonMessages } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -45,12 +46,10 @@ import {
   isAttributeColumnValue
 } from "@saleor/products/components/ProductListPage/utils";
 import {
-  productAddUrl,
   productListUrl,
   ProductListUrlDialog,
   ProductListUrlQueryParams,
-  ProductListUrlSortField,
-  productUrl
+  ProductListUrlSortField
 } from "@saleor/products/urls";
 import useAttributeSearch from "@saleor/searches/useAttributeSearch";
 import useAttributeValueSearch from "@saleor/searches/useAttributeValueSearch";
@@ -88,7 +87,6 @@ interface ProductListProps {
 export const ProductList: React.FC<ProductListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { queue } = useBackgroundTask();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids
@@ -198,10 +196,12 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
       if (data.exportProducts.errors.length === 0) {
         notify({
           text: intl.formatMessage({
+            id: "dPYqy0",
             defaultMessage:
               "We are currently exporting your requested CSV. As soon as it is available it will be sent to your email address"
           }),
           title: intl.formatMessage({
+            id: "5QKsu+",
             defaultMessage: "Exporting CSV",
             description: "waiting for export to end, header"
           })
@@ -341,14 +341,14 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
     channelOpts
   );
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    data?.products?.pageInfo,
+  const paginationValues = usePaginator({
+    pageInfo: data?.products?.pageInfo,
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <ProductListPage
         activeAttributeSortId={params.attributeId}
         sort={{
@@ -382,17 +382,12 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
               .hasNextPage,
           false
         )}
-        onAdd={() => navigate(productAddUrl())}
         disabled={loading}
         limits={limitOpts.data?.shop.limits}
         products={mapEdgesToItems(data?.products)}
         onColumnQueryChange={availableInGridAttributesOpts.search}
         onFetchMore={availableInGridAttributesOpts.loadMore}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onUpdateListSettings={updateListSettings}
-        pageInfo={pageInfo}
-        onRowClick={id => () => navigate(productUrl(id))}
         onAll={resetFilters}
         toolbar={
           <IconButton
@@ -420,7 +415,6 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         initialSearch={params.query || ""}
         tabs={getFilterTabs().map(tab => tab.name)}
         onExport={() => openModal("export")}
-        channelsCount={availableChannels?.length}
         selectedChannelId={selectedChannel?.id}
         columnQuery={availableInGridAttributesOpts.query}
       />
@@ -434,6 +428,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
           })
         }
         title={intl.formatMessage({
+          id: "F4WdSO",
           defaultMessage: "Delete Products",
           description: "dialog header"
         })}
@@ -441,6 +436,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
       >
         <DialogContentText>
           <FormattedMessage
+            id="yDkmX7"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this product?} other{Are you sure you want to delete {displayQuantity} products?}}"
             description="dialog content"
             values={{
@@ -498,7 +494,7 @@ export const ProductList: React.FC<ProductListProps> = ({ params }) => {
         onSubmit={handleFilterTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default ProductList;

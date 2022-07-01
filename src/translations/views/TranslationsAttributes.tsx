@@ -11,6 +11,7 @@ import useLocalPaginator, {
 } from "@saleor/hooks/useLocalPaginator";
 import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
+import { PaginatorContext } from "@saleor/hooks/usePaginator";
 import useShop from "@saleor/hooks/useShop";
 import { commonMessages } from "@saleor/intl";
 import { ListViews, Pagination } from "@saleor/types";
@@ -23,11 +24,6 @@ import TranslationsAttributesPage, {
   fieldNames
 } from "../components/TranslationsAttributesPage";
 import { TranslationField } from "../types";
-import {
-  languageEntitiesUrl,
-  languageEntityUrl,
-  TranslatableEntities
-} from "../urls";
 
 export interface TranslationsAttributesQueryParams extends Pagination {
   activeField: string;
@@ -72,8 +68,8 @@ const TranslationsAttributes: React.FC<TranslationsAttributesProps> = ({
       ? translationData
       : null;
 
-  const paginateValues = useLocalPaginator(setValuesPaginationState);
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginateValues(
+  const paginate = useLocalPaginator(setValuesPaginationState);
+  const { pageInfo, ...paginationValues } = paginate(
     translation?.attribute?.choices?.pageInfo,
     valuesPaginationState
   );
@@ -174,36 +170,26 @@ const TranslationsAttributes: React.FC<TranslationsAttributesProps> = ({
   );
 
   return (
-    <TranslationsAttributesPage
-      activeField={params.activeField}
-      disabled={
-        attributeTranslations.loading ||
-        updateAttributeTranslationsOpts.loading ||
-        updateAttributeValueTranslationsOpts.loading
-      }
-      languageCode={languageCode}
-      languages={maybe(() => shop.languages, [])}
-      saveButtonState={saveButtonState}
-      onBack={() =>
-        navigate(
-          languageEntitiesUrl(languageCode, {
-            tab: TranslatableEntities.attributes
-          })
-        )
-      }
-      onEdit={onEdit}
-      onDiscard={onDiscard}
-      onLanguageChange={lang =>
-        navigate(languageEntityUrl(lang, TranslatableEntities.attributes, id))
-      }
-      onSubmit={handleSubmit}
-      data={translation}
-      settings={settings}
-      onUpdateListSettings={updateListSettings}
-      pageInfo={pageInfo}
-      onNextPage={loadNextPage}
-      onPreviousPage={loadPreviousPage}
-    />
+    <PaginatorContext.Provider value={{ ...pageInfo, ...paginationValues }}>
+      <TranslationsAttributesPage
+        translationId={id}
+        activeField={params.activeField}
+        disabled={
+          attributeTranslations.loading ||
+          updateAttributeTranslationsOpts.loading ||
+          updateAttributeValueTranslationsOpts.loading
+        }
+        languageCode={languageCode}
+        languages={maybe(() => shop.languages, [])}
+        saveButtonState={saveButtonState}
+        onEdit={onEdit}
+        onDiscard={onDiscard}
+        onSubmit={handleSubmit}
+        data={translation}
+        settings={settings}
+        onUpdateListSettings={updateListSettings}
+      />
+    </PaginatorContext.Provider>
   );
 };
 TranslationsAttributes.displayName = "TranslationsAttributes";

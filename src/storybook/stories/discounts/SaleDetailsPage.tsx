@@ -1,6 +1,7 @@
 import { channelsList } from "@saleor/channels/fixtures";
 import { createSaleChannels } from "@saleor/channels/utils";
 import { DiscountErrorCode } from "@saleor/graphql";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -22,31 +23,19 @@ const props: SaleDetailsPageProps = {
   collectionListToolbar: null,
   disabled: false,
   errors: [],
-  hasChannelChanged: false,
-  onBack: () => undefined,
   onCategoryAssign: () => undefined,
-  onCategoryClick: () => undefined,
   onCategoryUnassign: () => undefined,
   onChannelsChange: () => undefined,
   onCollectionAssign: () => undefined,
-  onCollectionClick: () => undefined,
   onCollectionUnassign: () => undefined,
-  onNextPage: () => undefined,
-  onPreviousPage: () => undefined,
   onProductAssign: () => undefined,
-  onProductClick: () => undefined,
   onProductUnassign: () => undefined,
   onVariantAssign: () => undefined,
-  onVariantClick: () => undefined,
   onVariantUnassign: () => undefined,
   onRemove: () => undefined,
   onSubmit: () => undefined,
   onTabClick: () => undefined,
   openChannelsModal: () => undefined,
-  pageInfo: {
-    hasNextPage: true,
-    hasPreviousPage: false
-  },
   productListToolbar: null,
   variantListToolbar: null,
   sale,
@@ -57,6 +46,7 @@ const props: SaleDetailsPageProps = {
 
 storiesOf("Views / Discounts / Sale details", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <SaleDetailsPage {...props} />)
   .add("loading", () => (
     <SaleDetailsPage {...props} sale={undefined} disabled={true} />

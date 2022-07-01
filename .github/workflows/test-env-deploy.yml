@@ -7,6 +7,8 @@ jobs:
   deploy:
     if: github.event.pull_request.head.repo.full_name == 'saleor/saleor-dashboard'
     runs-on: ubuntu-latest
+    outputs:
+      base_URL: ${{ steps.set-domain.outputs.domain }}
     steps:
       - uses: actions/checkout@v2
 
@@ -55,11 +57,21 @@ jobs:
           pattern: (http|https)://[a-zA-Z0-9.-]+/graphql/?
         run: |
           echo "::set-output name=custom_api_uri::$(echo $pull_request_body | grep -Eo "$prefix$pattern" | sed s/$prefix// | head -n 1)"
+      - name: Get MARKETPLACE_URL
+        id: marketplace_url
+        # Search for MARKETPLACE_URL in PR description
+        env:
+          pull_request_body: ${{ github.event.pull_request.body }}
+          prefix: MARKETPLACE_URL=
+          pattern: (http|https)://[a-zA-Z0-9.-]+/?
+        run: |
+          echo "::set-output name=custom_marketplace_url::$(echo $pull_request_body | grep -Eo "$prefix$pattern" | sed s/$prefix// | head -n 1)"
 
       - name: Run build
         env:
           # Use custom API_URI or the default one
           API_URI: ${{ steps.api_uri.outputs.custom_api_uri || 'https://qa.staging.saleor.cloud/graphql/' }}
+          MARKETPLACE_URL: ${{ steps.marketplace_url.outputs.custom_marketplace_url }}
           APP_MOUNT_URI: /
           STATIC_URL: /
           IS_CLOUD_INSTANCE: true
@@ -111,7 +123,6 @@ jobs:
           env_url: https://${{ steps.set-domain.outputs.domain }}/storybook/index.html
           deployment_id: ${{ steps.storybook-deployment.outputs.deployment_id }}
 
-
   cypress-run-critical:
     needs: deploy
     runs-on: ubuntu-latest
@@ -129,10 +140,6 @@ jobs:
           fallback_uri: ${{ secrets.CYPRESS_API_URI }}
         run: |
           echo "::set-output name=custom_api_uri::$(echo $pull_request_body | grep -Eo "$prefix$pattern" | sed s/$prefix// | head -n 1 | { read custom_uri; if [ -z "$custom_uri" ]; then echo "$fallback_uri"; else echo "$custom_uri"; fi })"
-      - name: Get base_URL
-        id: base_URL
-        run: |
-          echo "::set-output name=base_URL::https://$(echo ${GITHUB_HEAD_REF}).dashboard.saleor.rocks"
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
@@ -155,18 +162,20 @@ jobs:
         run: npm install
 
       - name: Cypress run critical
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         env:
           API_URI: ${{ steps.api_uri.outputs.custom_api_uri }}
           APP_MOUNT_URI: ${{ secrets.APP_MOUNT_URI }}
-          CYPRESS_baseUrl: ${{ steps.base_URL.outputs.base_URL }}
+          CYPRESS_baseUrl: https://${{needs.deploy.outputs.base_URL}}
           CYPRESS_USER_NAME: ${{ secrets.CYPRESS_USER_NAME }}
           CYPRESS_SECOND_USER_NAME: ${{ secrets.CYPRESS_SECOND_USER_NAME }}
           CYPRESS_USER_PASSWORD: ${{ secrets.CYPRESS_USER_PASSWORD }}
           CYPRESS_PERMISSIONS_USERS_PASSWORD: ${{ secrets.CYPRESS_PERMISSIONS_USERS_PASSWORD }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          COMMIT_INFO_MESSAGE: Critical tests triggered on PR - ${{ github.ref_name }}
         with:
-          command: npm run cy:run:critical
-          wait-on: ${{ steps.base_URL.outputs.base_URL }}
+          tag: Critical, ${{github.event.action}}
+          command: npx cypress run --record --env tags=critical --spec cypress/e2e/navigation.js,cypress/e2e/products/createProduct.js,cypress/e2e/products/productsVariants.js --tag Critical, PR_Deploy
       - uses: actions/upload-artifact@v1
         with:
           name: cypress-videos

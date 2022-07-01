@@ -16,7 +16,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { commonMessages, sectionNames } from "@saleor/intl";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
@@ -32,11 +33,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import VoucherListPage from "../../components/VoucherListPage";
 import {
-  voucherAddUrl,
   voucherListUrl,
   VoucherListUrlDialog,
-  VoucherListUrlQueryParams,
-  voucherUrl
+  VoucherListUrlQueryParams
 } from "../../urls";
 import {
   deleteFilterTab,
@@ -57,7 +56,6 @@ interface VoucherListProps {
 export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids
   );
@@ -147,11 +145,11 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
 
   const canOpenBulkActionDialog = maybe(() => params.ids.length > 0);
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    data?.vouchers?.pageInfo,
+  const paginationValues = usePaginator({
+    pageInfo: data?.vouchers?.pageInfo,
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const [
     voucherBulkDelete,
@@ -180,7 +178,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
   const handleSort = createSortHandler(navigate, voucherListUrl, params);
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <WindowTitle title={intl.formatMessage(sectionNames.vouchers)} />
       <VoucherListPage
         currentTab={currentTab}
@@ -196,12 +194,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         settings={settings}
         vouchers={mapEdgesToItems(data?.vouchers)}
         disabled={loading}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(voucherAddUrl())}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onUpdateListSettings={updateListSettings}
-        onRowClick={id => () => navigate(voucherUrl(id))}
         onSort={handleSort}
         isChecked={isSelected}
         selected={listElements.length}
@@ -229,6 +222,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         onConfirm={onVoucherBulkDelete}
         open={params.action === "remove" && canOpenBulkActionDialog}
         title={intl.formatMessage({
+          id: "Q0JJ4F",
           defaultMessage: "Delete Vouchers",
           description: "dialog header"
         })}
@@ -237,6 +231,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         {canOpenBulkActionDialog && (
           <DialogContentText>
             <FormattedMessage
+              id="O9QPe1"
               defaultMessage="{counter,plural,one{Are you sure you want to delete this voucher?} other{Are you sure you want to delete {displayQuantity} vouchers?}}"
               description="dialog content"
               values={{
@@ -260,7 +255,7 @@ export const VoucherList: React.FC<VoucherListProps> = ({ params }) => {
         onSubmit={handleTabDelete}
         tabName={maybe(() => tabs[currentTab - 1].name, "...")}
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 export default VoucherList;

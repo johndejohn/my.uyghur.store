@@ -10,6 +10,7 @@ import {
   sortPageProps,
   tabPageProps
 } from "@saleor/fixtures";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import { storiesOf } from "@storybook/react";
 import React from "react";
 
@@ -18,7 +19,6 @@ import Decorator from "../../Decorator";
 const categoryTableProps: CategoryTableProps = {
   categories,
   onAdd: undefined,
-  onRowClick: () => undefined,
   ...listActionsProps,
   ...tabPageProps,
   ...pageListProps.default,
@@ -32,6 +32,7 @@ const categoryTableProps: CategoryTableProps = {
 
 storiesOf("Views / Categories / Category list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <CategoryListPage {...categoryTableProps} />)
   .add("loading", () => (
     <CategoryListPage {...categoryTableProps} categories={undefined} />

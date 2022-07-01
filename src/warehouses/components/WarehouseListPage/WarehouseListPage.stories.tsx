@@ -7,6 +7,7 @@ import {
   tabPageProps
 } from "@saleor/fixtures";
 import Decorator from "@saleor/storybook/Decorator";
+import { PaginatorContextDecorator } from "@saleor/storybook/PaginatorContextDecorator";
 import WarehouseListPage, {
   WarehouseListPageProps
 } from "@saleor/warehouses/components/WarehouseListPage";
@@ -22,7 +23,6 @@ const props: WarehouseListPageProps = {
   ...sortPageProps,
   ...tabPageProps,
   limits,
-  onBack: () => undefined,
   onRemove: () => undefined,
   sort: {
     ...sortPageProps.sort,
@@ -33,6 +33,7 @@ const props: WarehouseListPageProps = {
 
 storiesOf("Views / Warehouses / Warehouse list", module)
   .addDecorator(Decorator)
+  .addDecorator(PaginatorContextDecorator)
   .add("default", () => <WarehouseListPage {...props} />)
   .add("loading", () => (
     <WarehouseListPage {...props} disabled={true} warehouses={undefined} />

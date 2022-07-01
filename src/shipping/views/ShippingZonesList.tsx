@@ -1,7 +1,6 @@
 import { DialogContentText } from "@material-ui/core";
 import { useUser } from "@saleor/auth";
 import ActionDialog from "@saleor/components/ActionDialog";
-import { configurationMenuUrl } from "@saleor/configuration";
 import {
   useBulkDeleteShippingZoneMutation,
   useDeleteShippingZoneMutation,
@@ -14,7 +13,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import useShop from "@saleor/hooks/useShop";
 import { commonMessages } from "@saleor/intl";
@@ -33,11 +33,9 @@ import { FormattedMessage, useIntl } from "react-intl";
 
 import ShippingZonesListPage from "../components/ShippingZonesListPage";
 import {
-  shippingZoneAddUrl,
   shippingZonesListUrl,
   ShippingZonesListUrlDialog,
-  ShippingZonesListUrlQueryParams,
-  shippingZoneUrl
+  ShippingZonesListUrlQueryParams
 } from "../urls";
 
 interface ShippingZonesListProps {
@@ -49,7 +47,6 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
 }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const shop = useShop();
   const { user } = useUser();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
@@ -129,14 +126,14 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
     }
   });
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.shippingZones.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.shippingZones.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <ShippingZonesListPage
         defaultWeightUnit={shop?.defaultWeightUnit}
         settings={settings}
@@ -146,18 +143,12 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
           updateDefaultWeightUnitOpts.loading
         }
         shippingZones={mapEdgesToItems(data?.shippingZones)}
-        pageInfo={pageInfo}
-        onAdd={() => navigate(shippingZoneAddUrl)}
-        onBack={() => navigate(configurationMenuUrl)}
         onUpdateListSettings={updateListSettings}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
         onRemove={id =>
           openModal("remove", {
             id
           })
         }
-        onRowClick={id => () => navigate(shippingZoneUrl(id))}
         onSubmit={unit =>
           extractMutationErrors(
             updateDefaultWeightUnit({
@@ -191,6 +182,7 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
         confirmButtonState={deleteShippingZoneOpts.status}
         variant="delete"
         title={intl.formatMessage({
+          id: "k3EI/U",
           defaultMessage: "Delete Shipping Zone",
           description: "dialog header"
         })}
@@ -203,6 +195,7 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
       >
         <DialogContentText>
           <FormattedMessage
+            id="qf/m5l"
             defaultMessage="Are you sure you want to delete {shippingZoneName} shipping zone?"
             values={{
               shippingZoneName: (
@@ -223,6 +216,7 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
         confirmButtonState={bulkDeleteShippingZoneOpts.status}
         variant="delete"
         title={intl.formatMessage({
+          id: "cpZLRH",
           defaultMessage: "Delete Shipping Zones",
           description: "dialog header"
         })}
@@ -235,6 +229,7 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
       >
         <DialogContentText>
           <FormattedMessage
+            id="C9pcQx"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this shipping zone?} other{Are you sure you want to delete {displayQuantity} shipping zones?}}"
             description="dialog content"
             values={{
@@ -248,7 +243,7 @@ export const ShippingZonesList: React.FC<ShippingZonesListProps> = ({
           />
         </DialogContentText>
       </ActionDialog>
-    </>
+    </PaginatorContext.Provider>
   );
 };
 ShippingZonesList.displayName = "ShippingZonesList";

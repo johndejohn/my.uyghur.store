@@ -5,16 +5,20 @@ import {
   TableFooter,
   TableRow
 } from "@material-ui/core";
+import { Button } from "@saleor/components/Button";
 import CardTitle from "@saleor/components/CardTitle";
 import { ChannelsAvailabilityDropdown } from "@saleor/components/ChannelsAvailabilityDropdown";
 import Checkbox from "@saleor/components/Checkbox";
 import ResponsiveTable from "@saleor/components/ResponsiveTable";
 import Skeleton from "@saleor/components/Skeleton";
+import { TableButtonWrapper } from "@saleor/components/TableButtonWrapper/TableButtonWrapper";
 import TableCellAvatar from "@saleor/components/TableCellAvatar";
 import TableHead from "@saleor/components/TableHead";
-import TablePagination from "@saleor/components/TablePagination";
+import { TablePaginationWithContext } from "@saleor/components/TablePagination";
+import TableRowLink from "@saleor/components/TableRowLink";
 import { SaleDetailsFragment, VoucherDetailsFragment } from "@saleor/graphql";
-import { Button, DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
+import { productUrl } from "@saleor/products/urls";
 import React from "react";
 import { FormattedMessage, useIntl } from "react-intl";
 
@@ -37,12 +41,8 @@ const DiscountProducts: React.FC<SaleProductsProps> = props => {
   const {
     products,
     disabled,
-    pageInfo,
-    onRowClick,
-    onPreviousPage,
     onProductAssign,
     onProductUnassign,
-    onNextPage,
     isChecked,
     selected,
     toggle,
@@ -98,15 +98,7 @@ const DiscountProducts: React.FC<SaleProductsProps> = props => {
         </TableHead>
         <TableFooter>
           <TableRow>
-            <TablePagination
-              colSpan={numberOfColumns}
-              hasNextPage={pageInfo && !disabled ? pageInfo.hasNextPage : false}
-              onNextPage={onNextPage}
-              hasPreviousPage={
-                pageInfo && !disabled ? pageInfo.hasPreviousPage : false
-              }
-              onPreviousPage={onPreviousPage}
-            />
+            <TablePaginationWithContext colSpan={numberOfColumns} />
           </TableRow>
         </TableFooter>
         <TableBody>
@@ -116,10 +108,10 @@ const DiscountProducts: React.FC<SaleProductsProps> = props => {
               const isSelected = product ? isChecked(product.id) : false;
 
               return (
-                <TableRow
+                <TableRowLink
                   hover={!!product}
                   key={product ? product.id : "skeleton"}
-                  onClick={product && onRowClick(product.id)}
+                  href={product && productUrl(product.id)}
                   className={classes.tableRow}
                   selected={isSelected}
                 >
@@ -155,18 +147,20 @@ const DiscountProducts: React.FC<SaleProductsProps> = props => {
                     )}
                   </TableCell>
                   <TableCell className={classes.colActions}>
-                    <IconButton
-                      variant="secondary"
-                      disabled={!product || disabled}
-                      onClick={event => {
-                        event.stopPropagation();
-                        onProductUnassign(product.id);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <TableButtonWrapper>
+                      <IconButton
+                        variant="secondary"
+                        disabled={!product || disabled}
+                        onClick={event => {
+                          event.stopPropagation();
+                          onProductUnassign(product.id);
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableButtonWrapper>
                   </TableCell>
-                </TableRow>
+                </TableRowLink>
               );
             },
             () => (

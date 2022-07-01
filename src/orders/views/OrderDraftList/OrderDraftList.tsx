@@ -18,7 +18,8 @@ import useNavigator from "@saleor/hooks/useNavigator";
 import useNotifier from "@saleor/hooks/useNotifier";
 import { usePaginationReset } from "@saleor/hooks/usePaginationReset";
 import usePaginator, {
-  createPaginationState
+  createPaginationState,
+  PaginatorContext
 } from "@saleor/hooks/usePaginator";
 import { DeleteIcon, IconButton } from "@saleor/macaw-ui";
 import { maybe } from "@saleor/misc";
@@ -57,7 +58,6 @@ interface OrderDraftListProps {
 export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
   const navigate = useNavigator();
   const notify = useNotifier();
-  const paginate = usePaginator();
   const { isSelected, listElements, reset, toggle, toggleAll } = useBulkActions(
     params.ids
   );
@@ -78,6 +78,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
         notify({
           status: "success",
           text: intl.formatMessage({
+            id: "ra2O4j",
             defaultMessage: "Deleted draft orders"
           })
         });
@@ -93,6 +94,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
       notify({
         status: "success",
         text: intl.formatMessage({
+          id: "6udlH+",
           defaultMessage: "Order draft successfully created"
         })
       });
@@ -163,11 +165,11 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
     variables: queryVariables
   });
 
-  const { loadNextPage, loadPreviousPage, pageInfo } = paginate(
-    maybe(() => data.draftOrders.pageInfo),
+  const paginationValues = usePaginator({
+    pageInfo: maybe(() => data.draftOrders.pageInfo),
     paginationState,
-    params
-  );
+    queryString: params
+  });
 
   const handleSort = createSortHandler(navigate, orderDraftListUrl, params);
 
@@ -179,7 +181,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
     });
 
   return (
-    <>
+    <PaginatorContext.Provider value={paginationValues}>
       <OrderDraftListPage
         currentTab={currentTab}
         filterOpts={getFilterOpts(params)}
@@ -195,11 +197,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
         disabled={loading}
         settings={settings}
         orders={mapEdgesToItems(data?.draftOrders)}
-        pageInfo={pageInfo}
         onAdd={() => openModal("create-order")}
-        onNextPage={loadNextPage}
-        onPreviousPage={loadPreviousPage}
-        onRowClick={id => () => navigate(orderUrl(id))}
         onSort={handleSort}
         onUpdateListSettings={updateListSettings}
         isChecked={isSelected}
@@ -227,6 +225,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
         onConfirm={onOrderDraftBulkDelete}
         open={params.action === "remove"}
         title={intl.formatMessage({
+          id: "qbmeUI",
           defaultMessage: "Delete Order Drafts",
           description: "dialog header"
         })}
@@ -234,6 +233,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
       >
         <DialogContentText>
           <FormattedMessage
+            id="Q6VRrE"
             defaultMessage="{counter,plural,one{Are you sure you want to delete this order draft?} other{Are you sure you want to delete {displayQuantity} order drafts?}}"
             description="dialog content"
             values={{
@@ -270,7 +270,7 @@ export const OrderDraftList: React.FC<OrderDraftListProps> = ({ params }) => {
           })
         }
       />
-    </>
+    </PaginatorContext.Provider>
   );
 };
 

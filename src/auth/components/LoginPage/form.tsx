@@ -11,6 +11,7 @@ export interface LoginFormData {
 export interface UseLoginFormResult {
   change: FormChange;
   data: LoginFormData;
+  hasChanged: boolean;
   submit: () => SubmitPromise;
 }
 
@@ -22,28 +23,29 @@ export interface LoginFormProps {
 const getLoginFormData = () => {
   if (DEMO_MODE) {
     return {
-      email: "admin@example.com",
-      password: "admin",
+      email: "admin@uyghur.store",
+      password: "admin"
     };
   }
   return { email: "", password: "" };
 };
 
 function useLoginForm(
-  onSubmit: (data: LoginFormData) => SubmitPromise,
+  onSubmit: (data: LoginFormData) => SubmitPromise
 ): UseLoginFormResult {
   const form = useForm(getLoginFormData());
 
-  const { change, data } = form;
+  const { change, hasChanged, data, setChanged } = form;
 
-  const handleFormSubmit = useHandleFormSubmit({ onSubmit });
+  const handleFormSubmit = useHandleFormSubmit({ onSubmit, setChanged });
 
   const submit = async () => handleFormSubmit(data);
 
   return {
     change,
     data,
-    submit,
+    hasChanged,
+    submit
   };
 }
 
